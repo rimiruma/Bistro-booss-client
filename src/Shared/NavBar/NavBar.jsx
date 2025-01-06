@@ -1,13 +1,41 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-
+import { AuthContext } from "../../providers/AuthProvider";
+import { FaShoppingCart } from "react-icons/fa";
+import useCart from "../../hooks/useCart";
 const NavBar = () => {
+    const { user, logOut } = useContext(AuthContext);
+    const [cart] = useCart();
 
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+            .catch(error => console.log(error)
+            )
+    }
     const links = <>
         <li className="text-white"><Link to="/">Home</Link></li>
         <li><Link to="/menu">Our Menu</Link></li>
         <li><Link to="/order/salad">OrderFood</Link></li>
-        <li><Link to="/login">Login</Link></li>
-        
+        <li><Link to="/secret">Secret</Link></li>
+        <li>
+            <Link to="/dashboard/cart">
+                <button className="btn">
+                    <FaShoppingCart></FaShoppingCart>
+                    <div className="badge badge-secondary">{cart.length}</div>
+                </button>
+            </Link>
+        </li>
+
+        {
+            user ? <>
+                {/* <span>{user?.displayName}</span> */}
+                <button onClick={handleLogOut} className="btn btn-active btn-ghost">LogOut</button>
+            </> : <>
+                <li><Link to="/login">Login</Link></li>
+            </>
+        }
+
     </>
 
     return (
@@ -32,7 +60,7 @@ const NavBar = () => {
                         <ul
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                                {links}
+                            {links}
                         </ul>
                     </div>
                     <a className="btn btn-ghost text-xl">Bistro Boos</a>
